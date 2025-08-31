@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Card, { CardData } from "./Components/cardComponent";
 
 // Home page
-export default function Home() {
+export default function CardCounting() {
   //Defaults
   const [cardArray,setCardArray] = useState<CardData[]>([
     { mainNumber: 1, numberOfClicks: 0, timeOfFirstClick: null },
@@ -19,6 +19,7 @@ export default function Home() {
 
   const [animatingCards, setAnimatingCards] = useState<number[]>([]);
 
+  //#region Managing CardArray Logic
   useEffect(() => {
     const fetchOrInitializeCards = async () => {
       const res = await fetch('/api/cards');
@@ -51,7 +52,9 @@ export default function Home() {
       )
     );
   }
+  //#endregion
 
+  //#region Sorting functions
   const resetCards = async () => {
     const resetArray = [...cardArray]
 
@@ -63,7 +66,9 @@ export default function Home() {
     // Sort by main number
     const sorted = resetArray.sort((a, b) => a.mainNumber - b.mainNumber);
 
-    animateClearArray()
+    animateClearArray();
+
+    setCardArray(sorted);
 
     // Reset all cards on server
     for (const card of cardArray) {
@@ -79,11 +84,9 @@ export default function Home() {
       const data = await res.json();
       handleCardUpdate(data);
     }
-
-    setCardArray(sorted)
   }
 
-  //Sorting functions
+  //Sort by number of clicks, most or least.
   const sortByClicks = (descending : boolean = true) => {
     const oldArray = [...cardArray];
 
@@ -94,6 +97,7 @@ export default function Home() {
     animateShuffleToNewArray(oldArray,sorted);
   }
 
+  //Sort by time of click, first or last.
   const sortByFirstClick = (cards : CardData[], sortByFirst : boolean = true) => {
     const oldArray = [...cards];
     const sorted = [...cards].sort((a, b) => {
@@ -103,15 +107,23 @@ export default function Home() {
       return sortByFirst ? aTime - bTime : bTime - aTime;
     });
     
-    animateShuffleToNewArray(oldArray,sorted)
+    animateShuffleToNewArray(oldArray,sorted);
   }
+  //#endregion
 
-  //Styling functions
+  //#region Styling functions
+
   const toggleLightMode = ()=>{
     document.body.classList.toggle('dark');
   }
 
-  // Not only animates but also sets the card Array as well!
+  /**
+   * Animates with scale down then up on 2 cards at a time. Slowly replaces the cardArray with
+   * the target array with each animation 1 at a time.
+   * @param sourceArray - The original location of the cards
+   * @param targetArray - The end result that the source Array will morph into
+   * @return cardArray replaced with the target Array at the end
+   */
   const animateShuffleToNewArray = async (sourceArray : CardData[], targetArray : CardData[]) => {
     //Turn the old array into the new array with animations
     for (let i = 0; i < targetArray.length; i++){
@@ -135,7 +147,10 @@ export default function Home() {
     }
   }
 
-  // Completely clears the array
+  /**
+   * Inflicts animating state on all cards. This calls all to scale down then up at the same time.
+   * Unlike animateShuffleToNewArray, this function does NOT affect cardArray.
+   */
   const animateClearArray = async () => {
     setAnimatingCards(cardArray.map((card) => card.mainNumber));
 
@@ -143,6 +158,7 @@ export default function Home() {
 
     setAnimatingCards([]);
   }
+  //#endregion
 
   //Page
   return (
