@@ -39,9 +39,10 @@ body {
 .component {
   background-color: var(--component-bg);
   color: var(--text-color);
-  transition: color 0.3s;
+  transition: background-color 0.5s, color 0.5s;
 }
 
 h1 {
-  color: var(--text-color)
+  color: var(--text-color);
+  transition: color 0.5s;
 }
