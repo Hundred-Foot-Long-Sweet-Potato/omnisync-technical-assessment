@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useRef, useState } from "react";
-import Card, { CardData } from "./Components/cardComponent";
+import Card from "./Components/cardComponent";
+import { CardData } from "./types/card";
 
 // Home page
 export default function CardCounting() {
@@ -56,7 +57,7 @@ export default function CardCounting() {
 
   //#region Sorting functions
   const resetCards = async () => {
-    const resetArray = [...cardArray]
+    const resetArray : CardData[] = [...cardArray]
 
     resetArray.forEach(card => {
       card.numberOfClicks = 0
@@ -72,7 +73,7 @@ export default function CardCounting() {
 
     // Reset all cards on server
     for (const card of cardArray) {
-      const res = await fetch('/api/cards', {
+      await fetch('/api/cards', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -80,15 +81,17 @@ export default function CardCounting() {
           numberOfClicks: 0,
           timeOfFirstClick: null
         }),
+      }).then(res => {
+        if (!res.ok) throw new Error(`Failed to reset card value! status: ${res.status}`);
+        return res.json();
       });
-      const data = await res.json();
-      handleCardUpdate(data);
+
     }
   }
 
   //Sort by number of clicks, most or least.
   const sortByClicks = (descending : boolean = true) => {
-    const oldArray = [...cardArray];
+    const oldArray : CardData[] = [...cardArray];
 
     const sorted = [...cardArray].sort((a, b) => {
       return descending ? b.numberOfClicks - a.numberOfClicks : a.numberOfClicks - b.numberOfClicks;

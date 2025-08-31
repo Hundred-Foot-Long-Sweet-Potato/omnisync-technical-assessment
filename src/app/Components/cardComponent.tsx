@@ -1,10 +1,5 @@
 import { useEffect, useState } from "react";
-
-export interface CardData {
-    mainNumber: number;
-    numberOfClicks: number;
-    timeOfFirstClick: number | null;
-}
+import { CardData } from "../types/card";
 
 export interface CardProps {
     card: CardData;
