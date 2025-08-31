@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Card, { CardData } from "./Components/cardComponent";
 
 // Home page
@@ -16,6 +16,8 @@ export default function Home() {
     { mainNumber: 7, numberOfClicks: 0, timeOfFirstClick: null },
     { mainNumber: 8, numberOfClicks: 0, timeOfFirstClick: null },
   ]);
+
+  const [animatingCards, setAnimatingCards] = useState<number[]>([]);
 
   useEffect(() => {
     const fetchOrInitializeCards = async () => {
@@ -79,11 +81,33 @@ export default function Home() {
   }
 
   //Sorting functions
-  const sortByClicks = (descending : boolean = true) => {
+  const sortByClicks = async (descending : boolean = true) => {
+    const oldArray = [...cardArray];
+
     const sorted = [...cardArray].sort((a, b) => {
       return descending ? b.numberOfClicks - a.numberOfClicks : a.numberOfClicks - b.numberOfClicks;
     });
-    setCardArray(sorted);
+
+    //Turn the old array into the new array with animations
+    for (let i = 0; i < sorted.length; i++){
+      // Since it's two different cards we need to swap
+      if (sorted[i].mainNumber !== oldArray[i].mainNumber){
+        let targetIndex = oldArray.findIndex(card => card.mainNumber === sorted[i].mainNumber);
+
+        setAnimatingCards([oldArray[i].mainNumber,oldArray[targetIndex].mainNumber]);
+
+        await new Promise(r=> setTimeout(r,400)); // Ensures that transitions trigger properly for 2nd card being swapped with
+
+        [oldArray[i], oldArray[targetIndex]] = [oldArray[targetIndex], oldArray[i]];
+        setCardArray([...oldArray]);
+        
+        await new Promise(r=> setTimeout(r,400)); // Ensures transitions trigger properly for 2nd card on way out
+
+        setAnimatingCards([]);
+
+        await new Promise(r=> setTimeout(r,400)); // Time in between cards so nothing happens too fast
+      }
+    }
   }
 
   const sortByFirstClick = (cards : CardData[], sortByFirst : boolean = true) => {
@@ -109,7 +133,7 @@ export default function Home() {
         <h1 className="text-6xl font-bold pb-10"> Card Counter!</h1>
         <div className="grid grid-cols-4 grid-rows-2 gap-8">
           {cardArray.map((card) => (
-            <Card key={card.mainNumber} card={card} onUpdate={handleCardUpdate}/>
+            <Card key={card.mainNumber} card={card} onUpdate={handleCardUpdate} isAnimating={animatingCards.includes(card.mainNumber)}/>
           ))}
         </div>
         <div className="pt-10 flex justify-center gap-4 ">

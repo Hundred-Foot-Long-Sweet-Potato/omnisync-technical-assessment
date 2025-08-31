@@ -9,9 +9,10 @@ export interface CardData {
 export interface CardProps {
     card: CardData;
     onUpdate: (updatedCard: CardData) => void;
+    isAnimating : boolean;
 }
 
-export default function Card({card, onUpdate}: CardProps) {
+export default function Card({card, isAnimating, onUpdate}: CardProps) {
     const [clickCount, setClickCount] = useState<number>(0);
     const [firstClickTime, setFirstClickTime] = useState<Date | null>(null);
 
@@ -48,7 +49,11 @@ export default function Card({card, onUpdate}: CardProps) {
     }, [card.numberOfClicks, card.timeOfFirstClick]);
 
     return(
-    <div className="w-64 h-40 bg-white text-2xl relative items-center font-bold rounded hover:scale-105 hover:bg-gray-200 border-2 border-black component"
+    <div className={`w-64 h-40 bg-white text-2xl relative flex justify-center items-center font-bold rounded border-2 border-black component
+        transform !transition-all !duration-300 ease-in-out
+        hover:scale-105 hover:rotate-1
+        active:scale-110 active:-rotate-2
+        ${isAnimating ? "scale-0" : "scale-100"}`}
         onClick={() => handleClick()}>
         <h1 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-4xl">{card.mainNumber}</h1>
         <div className="absolute bottom-2 left-2 right-2 flex flex-row justify-between text-xs text-gray-500">

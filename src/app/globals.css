@@ -36,6 +36,11 @@ body {
   transition: background-color 0.5s, color 0.5s;
 }
 
+.component:hover{
+  background-color: #c4c4c4;
+  transition: background-color 0.2s;
+}
+
 .component {
   background-color: var(--component-bg);
   color: var(--text-color);
