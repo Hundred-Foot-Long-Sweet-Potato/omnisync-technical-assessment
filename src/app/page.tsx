@@ -41,7 +41,8 @@ export default function CardCounting() {
       }else{
         // OnLoad sorts by first click time
         data = data.sort((a, b) => a.mainNumber - b.mainNumber);
-        sortByFirstClick(data,true);
+        setCardArray(data);
+        animateOnLoad(data);
       }
     }
 
@@ -162,6 +163,14 @@ export default function CardCounting() {
     await new Promise(r => setTimeout(r,400));
 
     setAnimatingCards([]);
+  }
+
+  const animateOnLoad = async (array : CardData[]) => {
+    animateClearArray()
+
+    await new Promise(r => setTimeout(r,800));
+
+    sortByFirstClick(array,true);
   }
   //#endregion
 

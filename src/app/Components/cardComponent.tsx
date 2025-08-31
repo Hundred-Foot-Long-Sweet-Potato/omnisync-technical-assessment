@@ -40,13 +40,11 @@ export default function Card({card, isAnimating, onUpdate}: CardProps) {
         onUpdate(data);
     }
 
-    // Mainly for reset from parent as it changes these 2 values.
+    // Mainly for reset and onLoad
     useEffect(() => {
-        if (card.numberOfClicks !== 0) return;
-
         setClickCount(card.numberOfClicks);
         setFirstClickTime(card.timeOfFirstClick ? new Date(card.timeOfFirstClick) : null);
-    }, [card.numberOfClicks, card.timeOfFirstClick]);
+    }, [isAnimating]);
 
     return(
     <div className={`w-64 h-40 bg-white text-2xl relative flex justify-center items-center font-bold rounded border-2 border-black component

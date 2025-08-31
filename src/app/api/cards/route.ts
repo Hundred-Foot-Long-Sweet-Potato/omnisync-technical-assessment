@@ -81,6 +81,12 @@ export async function PUT(req: Request) {
 
     return NextResponse.json(updatedCard, { status: 200 });
   } catch (error) {
+
+    //Handle not found (This is only possible if initial POST fails and user doesn't see error msg)
+    if (error instanceof Error && error.message.includes("Record to update not found!")){
+      return NextResponse.json({error:"Card not found!"},{status:404});
+    }
+
     return new Response(JSON.stringify({ error: "Failed to update card" }), { status: 500 });
   }
 }
