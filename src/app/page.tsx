@@ -58,8 +58,49 @@ export default function Home() {
   }
 
   const resetCards = async () => {
+
+    // Reset all cards on server
+    for (const card of cardArray) {
+      const res = await fetch('/api/cards', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          mainNumber: card.mainNumber,
+          numberOfClicks: 0,
+          timeOfFirstClick: null
+        }),
+      });
+      const data = await res.json();
+      handleCardUpdate(data);
+    }
+
+    // Reset all cards Locally
+    const resetArray = cardArray.map(card => ({
+      ...card,
+      numberOfClicks: 0,
+      timeOfFirstClick: null
+    }));
+    setCardArray(resetArray);
+
+    // Sort by main number
+    const sorted = resetArray.sort((a, b) => a.mainNumber - b.mainNumber);
+    setCardArray(sorted);
   }
 
+  //Sorting functions
+  const sortByClicks = () => {
+    const sorted = [...cardArray].sort((a, b) => b.numberOfClicks - a.numberOfClicks);
+    setCardArray(sorted);
+  }
+
+  const sortByFirstClick = () => {
+    const sorted = [...cardArray].sort((a, b) => {
+      if (a.timeOfFirstClick === null) return 1;
+      if (b.timeOfFirstClick === null) return -1;
+      return (a.timeOfFirstClick as number) - (b.timeOfFirstClick as number);
+    });
+    setCardArray(sorted);
+  }
 
   //Page
   return (
@@ -73,6 +114,8 @@ export default function Home() {
         </div>
         <div className="pt-10 flex justify-center gap-4">
           <button className="h-10 w-20 bg-white text-black" onClick={resetCards}>Reset</button>
+          <button className="h-10 w-20 bg-white text-black" onClick={sortByClicks}>Sort by Clicks</button>
+          <button className="h-10 w-20 bg-white text-black" onClick={sortByFirstClick}>Sort by first Clicked</button>
         </div>
       </main>
     </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export interface CardData {
     mainNumber: number;
@@ -12,12 +12,15 @@ export interface CardProps {
 }
 
 export default function Card({card, onUpdate}: CardProps) {
-    const [clickCount, setClickCount] = useState(0);
+    const [clickCount, setClickCount] = useState<number>(0);
     const [firstClickTime, setFirstClickTime] = useState<Date | null>(null);
 
     const handleClick = async () => {
+        let newFirstClickTime = firstClickTime;
+
         if (clickCount === 0) {
-            setFirstClickTime(new Date());
+            newFirstClickTime = new Date();
+            setFirstClickTime(newFirstClickTime);
         }
 
         const updatedCount = clickCount + 1;
@@ -30,13 +33,19 @@ export default function Card({card, onUpdate}: CardProps) {
             body: JSON.stringify({
                 mainNumber: card.mainNumber,
                 numberOfClicks: updatedCount,
-                timeOfFirstClick: firstClickTime ? firstClickTime: null
+                timeOfFirstClick: newFirstClickTime,
             }),
         });
 
         const data = await res.json();
         onUpdate(data);
     }
+
+    // Mainly for reset from parent as it changes these 2 values.
+    useEffect(() => {
+        setClickCount(card.numberOfClicks);
+        setFirstClickTime(card.timeOfFirstClick ? new Date(card.timeOfFirstClick) : null);
+    }, [card.numberOfClicks, card.timeOfFirstClick]);
 
     return(
     <div className="w-48 h-32 flex flex-col bg-white text-2xl justify-center items-center font-bold"
