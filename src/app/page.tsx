@@ -5,6 +5,7 @@ import Card, { CardData } from "./Components/cardComponent";
 
 // Home page
 export default function Home() {
+  //Defaults
   const [cardArray,setCardArray] = useState<CardData[]>([
     { mainNumber: 1, numberOfClicks: 0, timeOfFirstClick: null },
     { mainNumber: 2, numberOfClicks: 0, timeOfFirstClick: null },
@@ -18,13 +19,11 @@ export default function Home() {
 
   useEffect(() => {
     const fetchOrInitializeCards = async () => {
-      console.log("Fetching cards from server...");
       const res = await fetch('/api/cards');
       const data: CardData[] = await res.json();
 
       // Nothing in data means first time load
       if (data.length === 0) {
-        console.log("No cards found on server, initializing...");
         for (const card of cardArray) {
           const res = await fetch('/api/cards', {
             method: 'POST',
@@ -35,11 +34,10 @@ export default function Home() {
               timeOfFirstClick: null
             }),
           });
-          const createdCard = await res.json();
-          console.log("Created card:", createdCard);
+          await res.json();
         }
       }else{
-        // Sort the data by mainNumber to ensure correct order
+        // OnLoad sorts by first click time
         sortByFirstClick(data,true);
       }
     }
@@ -105,7 +103,7 @@ export default function Home() {
 
   //Page
   return (
-    <div className="min-h-screen flex justify-center items-center">
+    <div className="min-h-screen flex justify-center items-center select-none">
       <main>
         <h1 className="text-6xl font-bold pb-10"> Card Counter!</h1>
         <div className="grid grid-cols-4 grid-rows-2 gap-8">
@@ -113,16 +111,16 @@ export default function Home() {
             <Card key={card.mainNumber} card={card} onUpdate={handleCardUpdate}/>
           ))}
         </div>
-        <div className="pt-10 flex justify-center gap-4">
-          <button className="h-10 w-20 bg-white text-black" onClick={resetCards}>Reset</button>
+        <div className="pt-10 flex justify-center gap-4 ">
+          <button className="h-10 w-20 bg-white text-black rounded hover:scale-105 hover:bg-gray-200" onClick={resetCards}>Reset</button>
         </div>
         <div className="pt-10 flex justify-center gap-4">
-          <button className="h-10 w-40 bg-white text-black" onClick={() => sortByClicks(true)}>Sort by Most Clicks</button>
-          <button className="h-10 w-40 bg-white text-black" onClick={() => sortByFirstClick(cardArray,true)}>Sort by First Click</button>
+          <button className="h-10 w-40 bg-white text-black rounded hover:scale-105 hover:bg-gray-200" onClick={() => sortByClicks(true)}>Sort by Most Clicks</button>
+          <button className="h-10 w-40 bg-white text-black rounded hover:scale-105 hover:bg-gray-200" onClick={() => sortByFirstClick(cardArray,true)}>Sort by First Click</button>
         </div>
         <div className="pt-10 flex justify-center gap-4">
-          <button className="h-10 w-40 bg-white text-black" onClick={() => sortByClicks(false)}>Sort by Least Clicks</button>
-          <button className="h-10 w-40 bg-white text-black" onClick={() => sortByFirstClick(cardArray,false)}>Sort by Last Click</button>
+          <button className="h-10 w-40 bg-white text-black rounded hover:scale-105 hover:bg-gray-200" onClick={() => sortByClicks(false)}>Sort by Least Clicks</button>
+          <button className="h-10 w-40 bg-white text-black rounded hover:scale-105 hover:bg-gray-200" onClick={() => sortByFirstClick(cardArray,false)}>Sort by Last Click</button>
         </div>
       </main>
     </div>

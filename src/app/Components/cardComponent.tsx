@@ -48,12 +48,13 @@ export default function Card({card, onUpdate}: CardProps) {
     }, [card.numberOfClicks, card.timeOfFirstClick]);
 
     return(
-    <div className="w-48 h-32 flex flex-col bg-white text-2xl justify-center items-center font-bold"
+    <div className="w-64 h-40 bg-white text-2xl relative items-center font-bold rounded hover:scale-105 hover:bg-gray-200"
         onClick={() => handleClick()}>
-        <h1 className="text-black">{card.mainNumber}</h1>
-        <div>
-            <h2 className="text-sm text-gray-500">Clicks: {clickCount}</h2>
-            <h2 className="text-sm text-gray-500">First Click: {firstClickTime ? firstClickTime.toLocaleTimeString() : 'N/A'}</h2>
+        <h1 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-black text-4xl">{card.mainNumber}</h1>
+        <div className="absolute bottom-2 left-2 right-2 flex flex-row justify-between text-xs text-gray-500">
+            <h2>Clicks: {clickCount}</h2>
+            <h2>First Click: {firstClickTime ? firstClickTime.toLocaleTimeString() : 'N/A'}</h2>
         </div>
-    </div>);
+    </div>
+    );
 }
