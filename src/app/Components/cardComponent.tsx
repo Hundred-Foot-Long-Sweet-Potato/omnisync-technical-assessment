@@ -31,14 +31,20 @@ export default function Card({card, isAnimating, onUpdate}: CardProps) {
                 numberOfClicks: updatedCount,
                 timeOfFirstClick: newFirstClickTime,
             }),
+        }).then(res => {
+            if (!res.ok) throw new Error(`Failed to update Card! status: ${res.status}`);
+            return res.json();
         });
 
         const data = await res.json();
+
         onUpdate(data);
     }
 
     // Mainly for reset from parent as it changes these 2 values.
     useEffect(() => {
+        if (card.numberOfClicks !== 0) return;
+
         setClickCount(card.numberOfClicks);
         setFirstClickTime(card.timeOfFirstClick ? new Date(card.timeOfFirstClick) : null);
     }, [card.numberOfClicks, card.timeOfFirstClick]);

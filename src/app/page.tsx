@@ -33,6 +33,10 @@ export default function CardCounting() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(card),
+          }).then(res => {
+            // Now what the hell do I do here if this even fails??? Probably display some sort of error screen?
+            if (!res.ok) throw new Error(`Failed to create Card! status: ${res.status}`);
+            return res.json();
           });
         }
       }else{
