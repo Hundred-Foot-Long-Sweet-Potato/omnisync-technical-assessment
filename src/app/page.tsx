@@ -36,7 +36,6 @@ export default function CardCounting() {
           }).then(res => {
             // Now what the hell do I do here if this even fails??? Probably display some sort of error screen?
             if (!res.ok) throw new Error(`Failed to create Card! status: ${res.status}`);
-            return res.json();
           });
         }
       }else{
@@ -87,7 +86,6 @@ export default function CardCounting() {
         }),
       }).then(res => {
         if (!res.ok) throw new Error(`Failed to reset card value! status: ${res.status}`);
-        return res.json();
       });
 
     }

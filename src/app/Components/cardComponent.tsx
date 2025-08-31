@@ -31,10 +31,9 @@ export default function Card({card, isAnimating, onUpdate}: CardProps) {
                 numberOfClicks: updatedCount,
                 timeOfFirstClick: newFirstClickTime,
             }),
-        }).then(res => {
-            if (!res.ok) throw new Error(`Failed to update Card! status: ${res.status}`);
-            return res.json();
         });
+        
+        if (!res.ok) throw new Error(`Failed to update Card! status: ${res.status}`);
 
         const data = await res.json();
 
