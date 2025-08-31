@@ -1,5 +1,5 @@
 'use client'
-import Image from "next/image";
+
 import { useEffect, useState } from "react";
 import Card, { CardData } from "./Components/cardComponent";
 
@@ -96,10 +96,16 @@ export default function Home() {
     setCardArray(sorted);
   }
 
+  //Styling functions
+  const toggleLightMode = ()=>{
+    document.body.classList.toggle('dark');
+  }
+
   //Page
   return (
     <div className="min-h-screen flex justify-center items-center select-none">
       <main>
+        <button className=" absolute top-2 left-2 bg-white w-15 h-15 rounded-full hover:scale-105 hover:bg-gray-200 card border-black border-2 component" onClick={toggleLightMode}></button>
         <h1 className="text-6xl font-bold pb-10"> Card Counter!</h1>
         <div className="grid grid-cols-4 grid-rows-2 gap-8">
           {cardArray.map((card) => (
@@ -107,15 +113,15 @@ export default function Home() {
           ))}
         </div>
         <div className="pt-10 flex justify-center gap-4 ">
-          <button className="h-10 w-20 bg-white text-black rounded hover:scale-105 hover:bg-gray-200" onClick={resetCards}>Reset</button>
+          <button className="h-10 w-20 bg-white text-black rounded hover:scale-105 hover:bg-gray-200 component" onClick={resetCards}>Reset</button>
+        </div>
+        <div className="pt-10 flex justify-center gap-4 ">
+          <button className="h-10 w-40 bg-white text-black rounded hover:scale-105 hover:bg-gray-200 component" onClick={() => sortByClicks(true)}>Sort by Most Clicks</button>
+          <button className="h-10 w-40 bg-white text-black rounded hover:scale-105 hover:bg-gray-200 component" onClick={() => sortByFirstClick(cardArray,true)}>Sort by First Click</button>
         </div>
         <div className="pt-10 flex justify-center gap-4">
-          <button className="h-10 w-40 bg-white text-black rounded hover:scale-105 hover:bg-gray-200" onClick={() => sortByClicks(true)}>Sort by Most Clicks</button>
-          <button className="h-10 w-40 bg-white text-black rounded hover:scale-105 hover:bg-gray-200" onClick={() => sortByFirstClick(cardArray,true)}>Sort by First Click</button>
-        </div>
-        <div className="pt-10 flex justify-center gap-4">
-          <button className="h-10 w-40 bg-white text-black rounded hover:scale-105 hover:bg-gray-200" onClick={() => sortByClicks(false)}>Sort by Least Clicks</button>
-          <button className="h-10 w-40 bg-white text-black rounded hover:scale-105 hover:bg-gray-200" onClick={() => sortByFirstClick(cardArray,false)}>Sort by Last Click</button>
+          <button className="h-10 w-40 bg-white text-black rounded hover:scale-105 hover:bg-gray-200 component" onClick={() => sortByClicks(false)}>Sort by Least Clicks</button>
+          <button className="h-10 w-40 bg-white text-black rounded hover:scale-105 hover:bg-gray-200 component" onClick={() => sortByFirstClick(cardArray,false)}>Sort by Last Click</button>
         </div>
       </main>
     </div>
