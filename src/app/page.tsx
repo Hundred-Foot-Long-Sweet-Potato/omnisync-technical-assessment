@@ -25,16 +25,11 @@ export default function Home() {
       // Nothing in data means first time load
       if (data.length === 0) {
         for (const card of cardArray) {
-          const res = await fetch('/api/cards', {
+          await fetch('/api/cards', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              mainNumber: card.mainNumber,
-              numberOfClicks: 0,
-              timeOfFirstClick: null
-            }),
+            body: JSON.stringify(card),
           });
-          await res.json();
         }
       }else{
         // OnLoad sorts by first click time
@@ -92,7 +87,7 @@ export default function Home() {
   }
 
   const sortByFirstClick = (cards : CardData[], sortByFirst : boolean = true) => {
-    const sorted = cards.sort((a, b) => {
+    const sorted = [...cards].sort((a, b) => {
       const aTime = a.timeOfFirstClick ? new Date(a.timeOfFirstClick).getTime() : (sortByFirst ? Infinity : -Infinity);
       const bTime = b.timeOfFirstClick ? new Date(b.timeOfFirstClick).getTime() : (sortByFirst ? Infinity : -Infinity);
 
