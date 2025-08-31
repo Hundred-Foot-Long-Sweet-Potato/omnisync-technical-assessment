@@ -88,18 +88,22 @@ export default function Home() {
   }
 
   //Sorting functions
-  const sortByClicks = () => {
-    const sorted = [...cardArray].sort((a, b) => b.numberOfClicks - a.numberOfClicks);
+  const sortByClicks = (descending : boolean = true) => {
+    const sorted = [...cardArray].sort((a, b) => {
+      return descending ? b.numberOfClicks - a.numberOfClicks : a.numberOfClicks - b.numberOfClicks;
+    });
     setCardArray(sorted);
   }
 
-  const sortByFirstClick = () => {
+  const sortByFirstClick = (sortByFirst : boolean = true) => {
     const sorted = [...cardArray].sort((a, b) => {
-      if (a.timeOfFirstClick === null) return 1;
-      if (b.timeOfFirstClick === null) return -1;
-      return (a.timeOfFirstClick as number) - (b.timeOfFirstClick as number);
+      const aTime = a.timeOfFirstClick ? new Date(a.timeOfFirstClick).getTime() : (sortByFirst ? Infinity : -Infinity);
+      const bTime = b.timeOfFirstClick ? new Date(b.timeOfFirstClick).getTime() : (sortByFirst ? Infinity : -Infinity);
+
+      return sortByFirst ? aTime - bTime : bTime - aTime;
     });
     setCardArray(sorted);
+    console.log(sorted);
   }
 
   //Page
@@ -114,8 +118,14 @@ export default function Home() {
         </div>
         <div className="pt-10 flex justify-center gap-4">
           <button className="h-10 w-20 bg-white text-black" onClick={resetCards}>Reset</button>
-          <button className="h-10 w-20 bg-white text-black" onClick={sortByClicks}>Sort by Clicks</button>
-          <button className="h-10 w-20 bg-white text-black" onClick={sortByFirstClick}>Sort by first Clicked</button>
+        </div>
+        <div className="pt-10 flex justify-center gap-4">
+          <button className="h-10 w-40 bg-white text-black" onClick={() => sortByClicks(true)}>Sort by Most Clicks</button>
+          <button className="h-10 w-40 bg-white text-black" onClick={() => sortByFirstClick(true)}>Sort by First Click</button>
+        </div>
+        <div className="pt-10 flex justify-center gap-4">
+          <button className="h-10 w-40 bg-white text-black" onClick={() => sortByClicks(false)}>Sort by Least Clicks</button>
+          <button className="h-10 w-40 bg-white text-black" onClick={() => sortByFirstClick(false)}>Sort by Last Click</button>
         </div>
       </main>
     </div>
