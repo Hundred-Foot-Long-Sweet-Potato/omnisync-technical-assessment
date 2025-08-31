@@ -52,6 +52,17 @@ export default function Home() {
   }
 
   const resetCards = async () => {
+    const resetArray = [...cardArray]
+
+    resetArray.forEach(card => {
+      card.numberOfClicks = 0
+      card.timeOfFirstClick = null
+    });
+
+    // Sort by main number
+    const sorted = resetArray.sort((a, b) => a.mainNumber - b.mainNumber);
+
+    animateClearArray()
 
     // Reset all cards on server
     for (const card of cardArray) {
@@ -68,38 +79,51 @@ export default function Home() {
       handleCardUpdate(data);
     }
 
-    // Reset all cards Locally
-    const resetArray = cardArray.map(card => ({
-      ...card,
-      numberOfClicks: 0,
-      timeOfFirstClick: null
-    }));
-
-    // Sort by main number
-    const sorted = resetArray.sort((a, b) => a.mainNumber - b.mainNumber);
-    setCardArray(sorted);
+    setCardArray(sorted)
   }
 
   //Sorting functions
-  const sortByClicks = async (descending : boolean = true) => {
+  const sortByClicks = (descending : boolean = true) => {
     const oldArray = [...cardArray];
 
     const sorted = [...cardArray].sort((a, b) => {
       return descending ? b.numberOfClicks - a.numberOfClicks : a.numberOfClicks - b.numberOfClicks;
     });
 
-    //Turn the old array into the new array with animations
-    for (let i = 0; i < sorted.length; i++){
-      // Since it's two different cards we need to swap
-      if (sorted[i].mainNumber !== oldArray[i].mainNumber){
-        let targetIndex = oldArray.findIndex(card => card.mainNumber === sorted[i].mainNumber);
+    animateShuffleToNewArray(oldArray,sorted);
+  }
 
-        setAnimatingCards([oldArray[i].mainNumber,oldArray[targetIndex].mainNumber]);
+  const sortByFirstClick = (cards : CardData[], sortByFirst : boolean = true) => {
+    const oldArray = [...cardArray];
+    const sorted = [...cards].sort((a, b) => {
+      const aTime = a.timeOfFirstClick ? new Date(a.timeOfFirstClick).getTime() : (sortByFirst ? Infinity : -Infinity);
+      const bTime = b.timeOfFirstClick ? new Date(b.timeOfFirstClick).getTime() : (sortByFirst ? Infinity : -Infinity);
+
+      return sortByFirst ? aTime - bTime : bTime - aTime;
+    });
+    
+    animateShuffleToNewArray(oldArray,sorted)
+  }
+
+  //Styling functions
+  const toggleLightMode = ()=>{
+    document.body.classList.toggle('dark');
+  }
+
+  // Not only animates but also sets the card Array as well!
+  const animateShuffleToNewArray = async (sourceArray : CardData[], targetArray : CardData[]) => {
+    //Turn the old array into the new array with animations
+    for (let i = 0; i < targetArray.length; i++){
+      // Since it's two different cards we need to swap
+      if (targetArray[i].mainNumber !== sourceArray[i].mainNumber){
+        let targetIndex = sourceArray.findIndex(card => card.mainNumber === targetArray[i].mainNumber);
+
+        setAnimatingCards([sourceArray[i].mainNumber,sourceArray[targetIndex].mainNumber]);
 
         await new Promise(r=> setTimeout(r,400)); // Ensures that transitions trigger properly for 2nd card being swapped with
 
-        [oldArray[i], oldArray[targetIndex]] = [oldArray[targetIndex], oldArray[i]];
-        setCardArray([...oldArray]);
+        [sourceArray[i], sourceArray[targetIndex]] = [sourceArray[targetIndex], sourceArray[i]];
+        setCardArray([...sourceArray]);
         
         await new Promise(r=> setTimeout(r,400)); // Ensures transitions trigger properly for 2nd card on way out
 
@@ -110,19 +134,13 @@ export default function Home() {
     }
   }
 
-  const sortByFirstClick = (cards : CardData[], sortByFirst : boolean = true) => {
-    const sorted = [...cards].sort((a, b) => {
-      const aTime = a.timeOfFirstClick ? new Date(a.timeOfFirstClick).getTime() : (sortByFirst ? Infinity : -Infinity);
-      const bTime = b.timeOfFirstClick ? new Date(b.timeOfFirstClick).getTime() : (sortByFirst ? Infinity : -Infinity);
+  // Completely clears the array
+  const animateClearArray = async () => {
+    setAnimatingCards(cardArray.map((card) => card.mainNumber));
 
-      return sortByFirst ? aTime - bTime : bTime - aTime;
-    });
-    setCardArray(sorted);
-  }
+    await new Promise(r => setTimeout(r,400));
 
-  //Styling functions
-  const toggleLightMode = ()=>{
-    document.body.classList.toggle('dark');
+    setAnimatingCards([]);
   }
 
   //Page
