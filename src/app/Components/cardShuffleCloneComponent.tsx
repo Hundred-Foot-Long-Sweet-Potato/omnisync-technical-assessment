@@ -7,14 +7,14 @@ export interface Vector2 {
 }
 
 export interface CloneProps {
-    cardNumber: number;
+    cardData : CardData
     start: Vector2;
     end: Vector2;
     duration: number;
     isVisible : boolean;
 }
 
-export default function CardShuffleClone({cardNumber, isVisible,start,end,duration}: CloneProps) {
+export default function CardShuffleClone({cardData, isVisible,start,end,duration}: CloneProps) {
     const [position, setPosition] = useState<Vector2>(start);
 
     //Use effect when it's visible
@@ -43,7 +43,11 @@ export default function CardShuffleClone({cardNumber, isVisible,start,end,durati
         ${isVisible ? "opacity-100" : "opacity-0"}`}
         style={{transform:`translate(${position.x}px, ${position.y}px)`}}
         >
-        <h1 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-4xl">{cardNumber}</h1>
+        <h1 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-4xl">{cardData.mainNumber}</h1>
+        <div className="absolute bottom-2 left-2 right-2 flex flex-row justify-between text-xs text-gray-500">
+            <h2>Clicks: {cardData.numberOfClicks}</h2>
+            <h2>First Click: {cardData.timeOfFirstClick ? new Date(cardData.timeOfFirstClick).toLocaleTimeString(): 'N/A'}</h2>
+        </div>
     </div>
     );
 }

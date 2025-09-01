@@ -20,8 +20,8 @@ export default function CardCounting() {
   ]);
 
   const [cloneArray, setClones] = useState<CloneProps[]>([
-    {cardNumber: 1,start:{x: 0, y:0}, end:{x:0,y:0},duration: 300,  isVisible: false},
-    {cardNumber: 2,start:{x: 0, y:0}, end:{x:0,y:0},duration: 300,  isVisible: false},
+    {cardData: { mainNumber: 1, numberOfClicks: 0, timeOfFirstClick: null },start:{x: 0, y:0}, end:{x:0,y:0},duration: 300,  isVisible: false},
+    {cardData: { mainNumber: 2, numberOfClicks: 0, timeOfFirstClick: null },start:{x: 0, y:0}, end:{x:0,y:0},duration: 300,  isVisible: false},
   ])
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -175,8 +175,8 @@ export default function CardCounting() {
     const start2 = { x: rect2.left - containerRect.left, y: rect2.top - containerRect.top };
 
     setClones([
-      {cardNumber: card1.mainNumber,start: start1, end: start2, duration: 800, isVisible: true },
-      {cardNumber: card2.mainNumber,start: start2, end: start1, duration: 800, isVisible: true },
+      {cardData: card1,start: start1, end: start2, duration: 800, isVisible: true },
+      {cardData: card2,start: start2, end: start1, duration: 800, isVisible: true },
     ]);
 
     //Invisible our clones and visible our normal cards
@@ -218,7 +218,7 @@ export default function CardCounting() {
           ))}
 
           {cloneArray.map((clone) => (
-            <CardShuffleClone key={clone.cardNumber} cardNumber={clone.cardNumber} start={clone.start} end={clone.end} duration={clone.duration} isVisible={clone.isVisible} />
+            <CardShuffleClone key={clone.cardData.mainNumber} cardData={clone.cardData} start={clone.start} end={clone.end} duration={clone.duration} isVisible={clone.isVisible} />
           ))}
         </div>
         <div className="pt-10 flex justify-center gap-4 ">
