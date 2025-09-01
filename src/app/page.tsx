@@ -175,14 +175,14 @@ export default function CardCounting() {
     const start2 = { x: rect2.left - containerRect.left, y: rect2.top - containerRect.top };
 
     setClones([
-      {cardData: card1,start: start1, end: start2, duration: 800, isVisible: true },
-      {cardData: card2,start: start2, end: start1, duration: 800, isVisible: true },
+      {cardData: card1,start: start1, end: start2, duration: 400, isVisible: true },
+      {cardData: card2,start: start2, end: start1, duration: 400, isVisible: true },
     ]);
 
     //Invisible our clones and visible our normal cards
     setTimeout(() => {
       setClones((clones) => clones.map((clone) => ({ ...clone, isVisible: false })));
-    },1150)
+    },1150) // This number comes from the total time of timeouts above in aniamteShuffleToArray
   };
 
   /**
