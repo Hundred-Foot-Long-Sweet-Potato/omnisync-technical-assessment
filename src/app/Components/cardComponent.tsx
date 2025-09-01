@@ -7,6 +7,10 @@ export interface CardProps {
     isAnimating : boolean;
 }
 
+/**
+ * Card component. Holds all behavior for tracking number of clicks and time of first click.
+ * Sends data to the backend immediately on click.
+ */
 const Card = forwardRef<HTMLDivElement, CardProps>(({card, isAnimating, onUpdate},ref) => {
     const [clickCount, setClickCount] = useState<number>(0);
     const [firstClickTime, setFirstClickTime] = useState<Date | null>(null);

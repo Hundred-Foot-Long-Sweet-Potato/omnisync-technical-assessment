@@ -14,6 +14,10 @@ export interface CloneProps {
     isVisible : boolean;
 }
 
+/**
+ * Clone component. This visually looks exactly the same as the card Component but is only used for visuals 
+ * during animations. Needs all information from previous card to pretend to be it and then animation variables.
+ */
 export default function CardShuffleClone({cardData, isVisible,start,end,duration}: CloneProps) {
     const [position, setPosition] = useState<Vector2>(start);
 

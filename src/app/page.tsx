@@ -5,7 +5,15 @@ import Card from "./Components/cardComponent";
 import { CardData } from "./types/card";
 import CardShuffleClone, { CloneProps } from "./Components/cardShuffleCloneComponent";
 
-// Home page
+/**
+ * Card Counting page. Holds a 2x4 grid to hold cards. It does the following:
+ * - Add entries to database if it doesn't have any data, with blank cards
+ * - OnLoad loads all cards from database and then sorts by first clicked
+ * - Manages all cards and clone cards
+ * - Sorting functions and buttons for cards to change order to display
+ * - Toggle light mode
+ * - Animation helper functions to animate all css animations with shuffling and clearing.
+ */
 export default function CardCounting() {
   //Defaults
   const [cardArray,setCardArray] = useState<CardData[]>([
