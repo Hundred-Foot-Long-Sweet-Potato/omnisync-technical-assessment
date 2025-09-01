@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { CardData } from "../types/card";
 
 export interface CardProps {
@@ -7,7 +7,7 @@ export interface CardProps {
     isAnimating : boolean;
 }
 
-export default function Card({card, isAnimating, onUpdate}: CardProps) {
+const Card = forwardRef<HTMLDivElement, CardProps>(({card, isAnimating, onUpdate},ref) => {
     const [clickCount, setClickCount] = useState<number>(0);
     const [firstClickTime, setFirstClickTime] = useState<Date | null>(null);
 
@@ -47,7 +47,7 @@ export default function Card({card, isAnimating, onUpdate}: CardProps) {
     }, [isAnimating]);
 
     return(
-    <div className={`w-64 h-40 bg-white text-2xl relative flex justify-center items-center font-bold rounded border-2 border-black component
+    <div ref = {ref} className={`w-64 h-40 bg-white text-2xl relative flex justify-center items-center font-bold rounded border-2 border-black component
         transform !transition-all !duration-300 ease-in-out
         hover:scale-105 hover:rotate-1
         active:scale-110 active:-rotate-2
@@ -61,3 +61,8 @@ export default function Card({card, isAnimating, onUpdate}: CardProps) {
     </div>
     );
 }
+);
+
+Card.displayName = "Card";
+
+export default Card;
