@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Instructions on running the project locally:
 
-## Getting Started
+Requirements:
+- Docker (preferrably >4.x)
 
-First, run the development server:
+Run command:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+docker-compose up
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+------------------------------------------------------
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Familiar/Easy Portions:
+- Front-end functionality
+    - Displaying components
+    - UseEffects and other hooks
+    - General CSS
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Overall I had an easy and familiar time with general front end work. I knew what I was doing and felt comfortable.
 
-## Learn More
+Easy but unfamiliar:
+- Postgresql
+- Tailwind + global.css
 
-To learn more about Next.js, take a look at the following resources:
+I just hadn't used postgres before but other then setting up pgAdmin4 and then connecting the environment it wasn't particularly
+difficult and I didn't lose much time.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Tailwind was something I had used but not enough to feel familiar. Due to this I often still used global.css classes to do certain functionality 
+like dark mode.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Challenging:
+- Docker/prisma/api-routes
 
-## Deploy on Vercel
+I wouldn't say all of this was difficult but overall working with Docker was a learning experience since I hadn't worked with it before. Due to this 
+I was struggling for quite a bit trying to figure out the specifics of dockerfiles and docker-compose.yml, though overall I'm happy that I got to 
+learn this skill even if it was in the middle of an assessment.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+I ended up using prisma for the back-end api routes. Most of this went perfectly fine but there was a moment in time where the back-end was not able to
+read my JSON's properly and I did lose time in that. Though this is less so much of a difficulty issue but more so much of my experience in working with the
+back-end. Overall though it was just formatting error and it wasn't difficult as much as it just wasted time.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+--------------------------------------------------------
+
+Design Decisions:
+
+I believe most of my design decisions are straight forward given the limited scope of the project. I kept things localized to where it was needed
+and overall I believe I made good decisions here.
+
+There is a design decision I made regarding animation for shuffling. The two functions with funtion headers that explained the function's function.
+For one despite both being animating functions one of them does affect a useState for the cardArray while the other doesn't, this is just weird
+but I saw no reason to force functionality into the other function if it didn't need it. 
+
+A second choice I made was how the two different sort functions actually had different parameters. This is because onLoad had a functionality to
+sort by First Clicked. While I could of standardized both of them to take in a array parameter I realized that it was actually unnatural for the function
+to even have a parameter in the first place given that the following animateShuffleToNewArray directly modified cardArray. Due to this there could be
+a weird edge case of having 3 different Arrays being worked on and affecting animateShuffleToNewArray. I didn't test nor want that potential case
+so I simply didn't want to include that on the other array.
