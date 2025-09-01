@@ -2,6 +2,11 @@ Instructions on running the project locally:
 
 Requirements:
 - Docker (preferrably >4.x)
+- .env file
+
+I used the following .env file : DATABASE_URL="postgresql://postgres:dude2132@db:5432/postgres?schema=public"
+
+Use any option you have to see database. I just exec into docker in a cmd with : docker exec -it card_db psql -U postgres -d postgres
 
 Run command:
 
@@ -54,3 +59,5 @@ sort by First Clicked. While I could of standardized both of them to take in a a
 to even have a parameter in the first place given that the following animateShuffleToNewArray directly modified cardArray. Due to this there could be
 a weird edge case of having 3 different Arrays being worked on and affecting animateShuffleToNewArray. I didn't test nor want that potential case
 so I simply didn't want to include that on the other array.
+The reason why I had to include it though on this onLoad though is because setCardArray behaved in a way where it would not set the cardArray before 
+I actually did the animation. Due to this I had to pass it on through despite how weird it looks and being the only exception to this function call.
